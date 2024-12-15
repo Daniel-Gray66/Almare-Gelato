@@ -1,14 +1,15 @@
-
 //libraries that we're going to import 
-
-//These are the libraries which we are getting sqlite from
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-import 'dart:async';
+import 'package:flutter/material.dart';
 
 
 
-void main() async {
+//Running hte app
+void main() => runApp();
 
 
+//flutter is made up of widgets
+
+class MyApp extends StateLessWidget{
+
+    
 }
