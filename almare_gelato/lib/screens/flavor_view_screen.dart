@@ -13,41 +13,85 @@ class FlavorViewScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.home),
             onPressed: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const HomeScreen()),
               );
             },
-          )
+          ),
         ],
       ),
-      body: const Center (
-        child: Column (
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
           children: [
-            Text(
+            _buildFlavorCategory(
               'Traditional Flavors',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              [
+                'Dark Chocolate',
+                'Vanilla Beans',
+                'Nocciola',
+                'Stracciatella',
+                'Espresso',
+                'Pistachio',
+                'Gianduja',
+                'Tiramisu',
+                'Amarena',
+                'Malaga',
+                'Torrone',
+                'Amaretto',
+                'Fior di Latte',
+                'Bacio',
+              ],
             ),
-            SizedBox(height: 10),
-            Text('...'),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            _buildFlavorCategory(
               'Sorbet Flavors',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              [
+                'Mango',
+                'Lemon',
+                'Raspberry',
+                // Add more flavors as needed
+              ],
             ),
-            SizedBox(height: 10),
-            Text('...'),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            _buildFlavorCategory(
               'Almare Specials',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              [
+                'Flavor 1',
+                'Flavor 2',
+                'Flavor 3',
+                // Add more flavors as needed
+              ],
             ),
-            SizedBox(height: 10),
-            Text('...'),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildFlavorCategory(String title, List<String> flavors) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: flavors
+              .map(
+                (flavor) => Chip(
+              label: Text(flavor),
+              backgroundColor: Colors.grey[200],
+            ),
+          )
+              .toList(),
+        ),
+      ],
     );
   }
 }

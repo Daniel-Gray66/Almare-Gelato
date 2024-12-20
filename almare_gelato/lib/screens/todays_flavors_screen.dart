@@ -13,7 +13,7 @@ class TodaysFlavorsScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.home), // Add 'const' here
             onPressed: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const HomeScreen()),
               );
