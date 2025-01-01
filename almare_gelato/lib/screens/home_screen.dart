@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                        Image.asset('Images/Berkeley.jpg'),
+                        Image.asset('images/Berkeley.jpg'),
                         const SizedBox(height: 10),
                         const Text(
                           'BERKELEY',
@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                      Image.asset('Images/pleasanton.jpg'),
+                      Image.asset('images/pleasanton.jpg'),
                         const SizedBox(height: 10),
                         const Text(
                           'PLEASANTON',
