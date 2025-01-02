@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Gelato Shop App',
       theme: ThemeData(primarySwatch: Colors.green),
       home: const HomeScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
-
