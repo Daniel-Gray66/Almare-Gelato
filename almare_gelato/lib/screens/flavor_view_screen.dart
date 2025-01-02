@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'package:almare_gelato/widgets/customer_drawer.dart';
 
 class FlavorViewScreen extends StatelessWidget {
   const FlavorViewScreen({super.key});
@@ -21,6 +22,7 @@ class FlavorViewScreen extends StatelessWidget {
           ),
         ],
       ),
+      drawer: const CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
