@@ -10,17 +10,6 @@ class StampViewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Stamp View'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-            },
-          )
-        ],
       ),
       drawer: const CustomDrawer(),
       body: const Center(

@@ -10,17 +10,6 @@ class FlavorViewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flavor View'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-            },
-          ),
-        ],
       ),
       drawer: const CustomDrawer(),
       body: Padding(

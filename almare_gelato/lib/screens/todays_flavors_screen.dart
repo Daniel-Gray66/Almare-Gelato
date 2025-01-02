@@ -10,17 +10,6 @@ class TodaysFlavorsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Today's Flavors"), // Add 'const' here
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home), // Add 'const' here
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-            },
-          )
-        ],
       ),
       drawer: const CustomDrawer(),
       body:  const Center(

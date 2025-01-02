@@ -10,17 +10,7 @@ class HistoryViewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('History View'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-            },
-          )
-        ],
+
       ),
       drawer: const CustomDrawer(),
       body: const Padding(
