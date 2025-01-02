@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-
+import 'package:almare_gelato/widgets/customer_drawer.dart';
 
 class StampViewScreen extends StatelessWidget {
   const StampViewScreen({super.key});
@@ -22,6 +22,7 @@ class StampViewScreen extends StatelessWidget {
           )
         ],
       ),
+      drawer: const CustomDrawer(),
       body: const Center(
         child: Text('This is the Stamp View screen.'),
       ),
