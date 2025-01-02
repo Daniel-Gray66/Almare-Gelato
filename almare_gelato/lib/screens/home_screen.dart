@@ -24,7 +24,6 @@ class HomeScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(height: 20),
               // Images Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -32,8 +31,33 @@ class HomeScreen extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                        Image.asset('images/Berkeley.jpg'),
-                        const SizedBox(height: 10),
+                        Container(
+                            decoration: const BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 5.0,
+                                offset: Offset(5, 5),
+                                spreadRadius: 0.5,
+                              )
+                            ]),
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(35.0),
+                                child: Container(
+                                  child: Align(
+                                    alignment: Alignment(-0.5, -0.2),
+                                    widthFactor: 1,
+                                    heightFactor: 0.82,
+                                    child: Image.asset('images/Berkeley.jpg'),
+                                  ),
+                                ),
+                              ),
+                            )),
+                        const SizedBox(
+                          height: 10,
+                          width: 10,
+                        ),
                         const Text(
                           'BERKELEY',
                           style: TextStyle(
@@ -45,11 +69,37 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(
+                    width: 10,
+                    height: 10,
+                  ),
                   Expanded(
                     child: Column(
                       children: [
-                      Image.asset('images/pleasanton.jpg'),
+                        Container(
+                            decoration: const BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 5.0,
+                                offset: Offset(5, 5),
+                                spreadRadius: 0.5,
+                              )
+                            ]),
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(35.0),
+                                child: Container(
+                                  child: Align(
+                                    alignment: Alignment(-0.5, -0.2),
+                                    widthFactor: 1,
+                                    heightFactor: 1,
+                                    child: Image.asset('images/pleasanton.jpg'),
+                                  ),
+                                ),
+                              ),
+                            )),
+                        //Image.asset('images/pleasanton.jpg'),
                         const SizedBox(height: 10),
                         const Text(
                           'PLEASANTON',
