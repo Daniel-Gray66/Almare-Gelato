@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'package:almare_gelato/widgets/customer_drawer.dart';
 
 class HistoryViewScreen extends StatelessWidget {
   const HistoryViewScreen({super.key});
@@ -21,6 +22,7 @@ class HistoryViewScreen extends StatelessWidget {
           )
         ],
       ),
+      drawer: const CustomDrawer(),
       body: const Padding(
         padding: EdgeInsets.all(16.0),
         child: SingleChildScrollView(
