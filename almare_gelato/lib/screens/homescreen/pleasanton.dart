@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'common.dart';
 
 class Pleasanton extends StatelessWidget {
   const Pleasanton({super.key});
@@ -6,7 +7,7 @@ class Pleasanton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: [storefrontImage(), storeInfo()],
+      children: [storefrontImage(), hours()],
     );
   }
 
@@ -28,32 +29,32 @@ class Pleasanton extends StatelessWidget {
     );
   }
 
-  Widget storeInfo() {
-    return SingleChildScrollView(
-      child: Center(
-        child: Row(
-          children: [
-            hours(),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget hours() {
-    return Table(
-      columnWidths: const <int, TableColumnWidth>{
-        0: IntrinsicColumnWidth(flex: 4),
-        1: IntrinsicColumnWidth(),
-        // 1: FlexColumnWidth(),
-        // 2: FixedColumnWidth(60)
-      },
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: const [
-        TableRow(children: [Text("Th-Th 1pm-8pm"), Text("Th-Th 1pm-8pm")]),
-        TableRow(children: [Text("Th-Th 1pm-8pm"), Text("Th-Th 1pm-8pm")]),
-        // TableRow(children: [Text("Th-Th 1pm-8pm")])
-      ],
-    );
+    return Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Center(
+          child: Column(children: [
+            const Text("Hours",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline)),
+            Table(
+              border: Common.border(),
+              columnWidths: const <int, TableColumnWidth>{
+                0: FlexColumnWidth(),
+                1: FlexColumnWidth()
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                Common.row("Mon", "Closed"),
+                Common.row("T-Th", "1pm-8pm"),
+                Common.row("Fri", "12pm-8pm"),
+                Common.row("Sat", "12pm-9pm"),
+                Common.row("Sun", "Closed")
+              ],
+            )
+          ]),
+        ));
   }
 }

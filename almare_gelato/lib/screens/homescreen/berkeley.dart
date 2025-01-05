@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'common.dart';
 
 class Berkeley extends StatelessWidget {
   const Berkeley({super.key});
@@ -6,7 +7,7 @@ class Berkeley extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: [storefrontImage()],
+      children: [storefrontImage(), hours()],
     );
   }
 
@@ -26,5 +27,30 @@ class Berkeley extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget hours() {
+    return Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Center(
+          child: Column(children: [
+            const Text("Hours",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline)),
+            Table(
+              border: Common.border(),
+              columnWidths: const <int, TableColumnWidth>{
+                0: FlexColumnWidth(),
+                1: FlexColumnWidth()
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                Common.row("Everyday", "12pm-10pm"),
+              ],
+            )
+          ]),
+        ));
   }
 }
