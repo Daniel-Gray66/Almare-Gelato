@@ -34,6 +34,7 @@ class Berkeley extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Center(
           child: Column(children: [
+            const Divider(),
             const Text("Hours",
                 style: TextStyle(
                     fontSize: 20,
@@ -49,7 +50,27 @@ class Berkeley extends StatelessWidget {
               children: [
                 Common.row("Everyday", "12pm-10pm"),
               ],
-            )
+            ),
+            const Divider(
+              height: 60,
+            ),
+            const Text("Phone",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline)),
+            const Text("510 649 1888", style: TextStyle(fontSize: 20)),
+            const Divider(
+              height: 60,
+            ),
+            const Text("Partners",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline)),
+            const Text("UberEats", style: TextStyle(fontSize: 20)),
+            const Text("Grubhub", style: TextStyle(fontSize: 20)),
+            const Text("Doordash", style: TextStyle(fontSize: 20)),
           ]),
         ));
   }

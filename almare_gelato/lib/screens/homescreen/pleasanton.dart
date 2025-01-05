@@ -34,6 +34,7 @@ class Pleasanton extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Center(
           child: Column(children: [
+            const Divider(),
             const Text("Hours",
                 style: TextStyle(
                     fontSize: 20,
@@ -53,7 +54,27 @@ class Pleasanton extends StatelessWidget {
                 Common.row("Sat", "12pm-9pm"),
                 Common.row("Sun", "Closed")
               ],
-            )
+            ),
+            const Divider(
+              height: 60,
+            ),
+            const Text("Phone",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline)),
+            const Text("925 425 7266", style: TextStyle(fontSize: 20)),
+            const Divider(
+              height: 60,
+            ),
+            const Text("Partners",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline)),
+            const Text("UberEats", style: TextStyle(fontSize: 20)),
+            const Text("Grubhub", style: TextStyle(fontSize: 20)),
+            const Text("Doordash", style: TextStyle(fontSize: 20)),
           ]),
         ));
   }
