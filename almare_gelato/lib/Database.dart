@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._internal();
@@ -55,7 +56,7 @@ class DatabaseHelper {
     final db = await database;
 
     final currentStamps = await getStamps();
-    final newStamps = currentStamps + 1;
+    final newStamps = (currentStamps % 9) + 1; // Cycle back to 1 after 9
 
     await db.update(
       'stamp_card',
@@ -63,5 +64,23 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [1],
     );
+  }
+
+  Future<void> scanQrCodeAndAddStamp() async {
+    try {
+      // Scan QR code
+      String qrCode = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+
+      if (qrCode != '-1') {
+        // QR Code successfully scanned, add stamp
+        await addStamp();
+        print('Stamp added successfully!');
+      } else {
+        print('QR code scanning cancelled.');
+      }
+    } catch (e) {
+      print('Error scanning QR code: $e');
+    }
   }
 }
