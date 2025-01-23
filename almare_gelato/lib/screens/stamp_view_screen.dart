@@ -49,46 +49,55 @@ class _StampViewScreenState extends State<StampViewScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Gelato Stamp Card'),
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Gelato Stamp Card'),
+    ),
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Your Stamps:',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          // 3x3 grid layout
+          Column(
+            children: List.generate(3, (row) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(3, (col) {
+                  int index = row * 3 + col;
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.icecream,
+                      size: 50,
+                      color: index < _stamps ? Colors.orange : Colors.grey,
+                    ),
+                  );
+                }),
+              );
+            }),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: _scanQrCodeAndAddStamp, // Pass as a function reference
+            child: const Text('Scan QR Code'),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () async {
+              await DatabaseHelper.instance.addStamp();
+              await loadStamps();
+            },
+            child: const Text('Add Stamp (Test)'),
+          ),
+        ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Your Stamps:',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(10, (index) {
-                return Icon(
-                  Icons.icecream,
-                  size: 50,
-                  color: index < _stamps ? Colors.orange : Colors.grey,
-                );
-              }),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _scanQrCodeAndAddStamp, // Pass as a function reference
-              child: const Text('Scan QR Code'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                await DatabaseHelper.instance.addStamp();
-                await loadStamps();
-              },
-              child: const Text('Add Stamp (Test)'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+    ),
+  );
+}
 }
