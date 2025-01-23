@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:almare_gelato/widgets/customer_drawer.dart';
-import '../Database.dart'; // Update with the correct path to your DatabaseHelper class
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import '../Database.dart';
 
 class StampViewScreen extends StatefulWidget {
   const StampViewScreen({super.key});
@@ -10,29 +10,50 @@ class StampViewScreen extends StatefulWidget {
 }
 
 class _StampViewScreenState extends State<StampViewScreen> {
-  int _stamps = 0; // Variable to store the number of stamps
+  int _stamps = 0; // Holds the current number of stamps
 
   @override
   void initState() {
     super.initState();
-    _loadStamps(); // Load stamps when the screen initializes
+    loadStamps();
   }
 
-  // Method to load the number of stamps from the database
-  Future<void> _loadStamps() async {
-    final stamps = await DatabaseHelper.instance.getStamps(); // Fetch stamps
+  Future<void> loadStamps() async {
+    final int stamps = await DatabaseHelper.instance.getStamps();
     setState(() {
-      _stamps = stamps; // Update the state with the fetched stamps
+      _stamps = stamps;
     });
+  }
+
+  Future<void> _scanQrCodeAndAddStamp() async {
+    try {
+      final String qrCode = await FlutterBarcodeScanner.scanBarcode(
+        '#ff6666',
+        'Cancel',
+        true,
+        ScanMode.QR,
+      );
+
+      if (qrCode == 'ALMAREGELATOSTAMP123') {
+        await DatabaseHelper.instance.addStamp();
+        await loadStamps();
+        print('Stamp added successfully!');
+      } else if (qrCode != '-1') {
+        print('Invalid QR code.');
+      } else {
+        print('QR code scanning cancelled.');
+      }
+    } catch (e) {
+      print('Error scanning QR code: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Stamp View'),
+        title: const Text('Gelato Stamp Card'),
       ),
-      drawer: const CustomDrawer(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -54,11 +75,16 @@ class _StampViewScreenState extends State<StampViewScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
+              onPressed: _scanQrCodeAndAddStamp, // Pass as a function reference
+              child: const Text('Scan QR Code'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
               onPressed: () async {
-                await DatabaseHelper.instance.addStamp(); // Add a stamp to the database
-                _loadStamps(); // Refresh the stamps
+                await DatabaseHelper.instance.addStamp();
+                await loadStamps();
               },
-              child: const Text('Add Stamp'),
+              child: const Text('Add Stamp (Test)'),
             ),
           ],
         ),
