@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import '../Database.dart';
+import 'dart:math'; 
 
 class StampViewScreen extends StatefulWidget {
   const StampViewScreen({super.key});
@@ -48,7 +49,21 @@ class _StampViewScreenState extends State<StampViewScreen> {
     }
   }
 
-  @override
+
+
+
+
+Color getRandomColor() {
+  final random = Random();
+  return Color.fromARGB(
+    255,
+    random.nextInt(256),
+    random.nextInt(256),
+    random.nextInt(256),
+  );
+}
+
+@override
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
@@ -75,7 +90,7 @@ Widget build(BuildContext context) {
                     child: Icon(
                       Icons.icecream,
                       size: 50,
-                      color: index < _stamps ? Colors.orange : Colors.grey,
+                      color: index < _stamps ? getRandomColor() : Colors.grey,
                     ),
                   );
                 }),
