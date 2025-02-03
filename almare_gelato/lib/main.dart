@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'Database.dart';
-import 'screens/stampUI.dart'; 
+
+
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await DatabaseHelper.instance.database;
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure bindings are initialized
+  await DatabaseHelper.instance.database; // This ensures the database is initialized
   runApp(const MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

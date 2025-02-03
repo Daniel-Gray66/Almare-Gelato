@@ -7,22 +7,21 @@ class Pleasanton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: [storefrontImage(), hours()],
+      children: [storefrontImage(context), hours()],
     );
   }
 
-  Widget storefrontImage() {
+  Widget storefrontImage(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(5.0),
-      child: FittedBox(
-        fit: BoxFit.fitWidth,
+      width: MediaQuery.of(context).size.width,
+      child: AspectRatio(
+        aspectRatio: 16/9,  // Fixed typo: aspectRation -> aspectRatio
         child: ClipRRect(
           borderRadius: BorderRadius.circular(35.0),
-          child: Align(
-            alignment: const Alignment(-0.5, -0.2),
-            widthFactor: 1,
-            heightFactor: 0.82,
-            child: Image.asset('images/pleasanton.jpg'),
+          child: Image.asset(
+            'images/pleasanton.jpg',
+            fit: BoxFit.cover,  // Moved fit to Image.asset
           ),
         ),
       ),
@@ -31,20 +30,24 @@ class Pleasanton extends StatelessWidget {
 
   Widget hours() {
     return Container(
-        padding: const EdgeInsets.all(10.0),
-        child: Center(
-          child: Column(children: [
+      padding: const EdgeInsets.all(10.0),
+      child: Center(
+        child: Column(
+          children: [
             const Divider(),
-            const Text("Hours",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline)),
+            const Text(
+              "Hours",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+              ),
+            ),
             Table(
               border: Common.border(),
               columnWidths: const <int, TableColumnWidth>{
                 0: FlexColumnWidth(),
-                1: FlexColumnWidth()
+                1: FlexColumnWidth(),
               },
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: [
@@ -52,30 +55,34 @@ class Pleasanton extends StatelessWidget {
                 Common.row("T-Th", "1pm-8pm"),
                 Common.row("Fri", "12pm-8pm"),
                 Common.row("Sat", "12pm-9pm"),
-                Common.row("Sun", "Closed")
+                Common.row("Sun", "Closed"),
               ],
             ),
-            const Divider(
-              height: 60,
+            const Divider(height: 60),
+            const Text(
+              "Phone",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+              ),
             ),
-            const Text("Phone",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline)),
             const Text("925 425 7266", style: TextStyle(fontSize: 20)),
-            const Divider(
-              height: 60,
+            const Divider(height: 60),
+            const Text(
+              "Partners",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+              ),
             ),
-            const Text("Partners",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline)),
             const Text("UberEats", style: TextStyle(fontSize: 20)),
             const Text("Grubhub", style: TextStyle(fontSize: 20)),
             const Text("Doordash", style: TextStyle(fontSize: 20)),
-          ]),
-        ));
+          ],
+        ),
+      ),
+    );
   }
 }
