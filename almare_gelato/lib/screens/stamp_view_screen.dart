@@ -16,16 +16,61 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
   int _stamps = 0; // Holds the current number of stamps
   List<Color> _stampColors = [];
   late AnimationController _controller;
+  Animation<double>? _pressAnimation;  // Make nullable
+  Animation<double>? _scaleAnimation;  // Make nullable
+  Animation<double>? _opacityAnimation;  // Make nullable
   int? _lastAddedStampIndex;
 
   @override
   void initState() {
     super.initState();
+    _initializeAnimations();  // Separate initialization
+    loadStamps();
+  }
+
+  void _initializeAnimations() {
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    loadStamps();
+
+    _pressAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.0, end: 0.7)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 20.0,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.7, end: 1.2)
+            .chain(CurveTween(curve: Curves.bounceOut)),
+        weight: 50.0,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.2, end: 1.0)
+            .chain(CurveTween(curve: Curves.bounceOut)),
+        weight: 30.0,
+      ),
+    ]).animate(_controller);
+
+    _scaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 2.0, end: 1.0)
+            .chain(CurveTween(curve: Curves.easeOutExpo)),
+        weight: 100.0,
+      ),
+    ]).animate(_controller);
+
+    _opacityAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.0, end: 1.0)
+            .chain(CurveTween(curve: Curves.easeIn)),
+        weight: 20.0,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween<double>(1.0),
+        weight: 80.0,
+      ),
+    ]).animate(_controller);
   }
 
   @override
@@ -53,6 +98,48 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
     return Color.fromARGB(255, values[0], values[1], values[2]);
   }
 
+  void _showCompletionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: const Column(
+            children: [
+              Icon(
+                Icons.celebration,
+                color: Colors.pink,
+                size: 50,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Congratulations!',
+                style: TextStyle(
+                  color: Colors.pink,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: const Text(
+            'You\'ve collected all 9 stamps! Show this to an employee on your next visit to receive a free kids gelato.',
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            TextButton(
+              child: const Text('OK', style: TextStyle(color: Colors.pink)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> loadStamps() async {
     try {
       final oldStampCount = _stamps;
@@ -67,7 +154,6 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
           colors = colorsList.map((c) => stringToColor(c.toString())).toList();
         } catch (e) {
           print('Error parsing colors: $e');
-          // If there's an error parsing colors, just use empty list
           colors = [];
         }
       }
@@ -83,7 +169,7 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
 
       setState(() {
         _stamps = stamps;
-        _stampColors = colors;  
+        _stampColors = colors;
         if (stamps > oldStampCount) {
           _lastAddedStampIndex = stamps - 1;
           _controller.forward(from: 0.0).then((_) {
@@ -95,11 +181,18 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
               }
             });
           });
+          
+          if (stamps == 9) {
+            Future.delayed(const Duration(milliseconds: 1500), () {
+              if (mounted) {
+                _showCompletionDialog(context);
+              }
+            });
+          }
         }
       });
     } catch (e) {
       print('Error loading stamps: $e');
-      // Handle error gracefully
       setState(() {
         _stamps = 0;
         _stampColors = [];
@@ -136,28 +229,86 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        double scale = 1.0;
-        if (isNewStamp) {
-          scale = Tween<double>(begin: 0.0, end: 1.0)
-              .animate(CurvedAnimation(
-                parent: _controller,
-                curve: Curves.elasticOut,
-              ))
-              .value;
+        if (!isNewStamp || _pressAnimation == null) {
+          return _buildRegularStamp(index);
         }
         
-        return SparkleWidget(
-          showSparkle: isNewStamp,
-          child: Transform.scale(
-            scale: scale,
-            child: Icon(
-              Icons.icecream,
-              size: 50,
-              color: index < _stamps ? _stampColors[index] : Colors.grey,
+        return Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: [
+            // Shadow effect
+            if (_pressAnimation!.value < 1.0)
+              Positioned(
+                bottom: -2 * (1.0 - _pressAnimation!.value),
+                right: -2 * (1.0 - _pressAnimation!.value),
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: Icon(
+                    Icons.icecream,
+                    size: 50,
+                    color: Colors.black.withOpacity(0.3),
+                  ),
+                ),
+              ),
+            // Main stamp with press animation
+            Transform.scale(
+              scale: _pressAnimation!.value,
+              child: Opacity(
+                opacity: _opacityAnimation?.value ?? 1.0,
+                child: SparkleWidget(
+                  showSparkle: isNewStamp && _controller.value > 0.5,
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: Icon(
+                      Icons.icecream,
+                      size: 50,
+                      color: _stampColors[index],
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
+            // Ink splatter effect
+            if (_controller.value > 0.2 && _controller.value < 0.8)
+              ...List.generate(8, (i) {
+                final angle = (i * math.pi / 4);
+                final progress = (_controller.value - 0.2) * 1.7;
+                final distance = math.sin(progress * math.pi) * 20;
+                
+                return Positioned(
+                  left: math.cos(angle) * distance + 25,
+                  top: math.sin(angle) * distance + 25,
+                  child: Opacity(
+                    opacity: (1 - progress).clamp(0.0, 1.0) * 0.4,
+                    child: Container(
+                      width: 4,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: _stampColors[index],
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                );
+              }),
+          ],
         );
       },
+    );
+  }
+
+  Widget _buildRegularStamp(int index) {
+    return SizedBox(
+      width: 50,
+      height: 50,
+      child: Icon(
+        Icons.icecream,
+        size: 50,
+        color: index < _stamps ? _stampColors[index] : Colors.grey,
+      ),
     );
   }
 
@@ -228,15 +379,21 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
                             ),
                           ),
                           padding: const EdgeInsets.all(16),
+                          width: 300,
+                          height: 300,
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: List.generate(3, (row) {
                               return Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: List.generate(3, (col) {
                                   int index = row * 3 + col;
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: _buildStampIcon(index),
+                                  return SizedBox(
+                                    width: 70,
+                                    height: 70,
+                                    child: Center(
+                                      child: _buildStampIcon(index),
+                                    ),
                                   );
                                 }),
                               );
