@@ -3,6 +3,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import '../Database.dart';
 import 'dart:math'; 
 import 'dart:convert';
+import 'dart:math' as math;
 
 class StampViewScreen extends StatefulWidget {
   const StampViewScreen({super.key});
@@ -11,14 +12,26 @@ class StampViewScreen extends StatefulWidget {
   State<StampViewScreen> createState() => _StampViewScreenState();
 }
 
-class _StampViewScreenState extends State<StampViewScreen> {
+class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProviderStateMixin {
   int _stamps = 0; // Holds the current number of stamps
   List<Color> _stampColors = [];
+  late AnimationController _controller;
+  int? _lastAddedStampIndex;
 
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
     loadStamps();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Color getRandomColor() {
@@ -42,6 +55,7 @@ class _StampViewScreenState extends State<StampViewScreen> {
 
   Future<void> loadStamps() async {
     try {
+      final oldStampCount = _stamps;
       final stampData = await DatabaseHelper.instance.getStampData();
       final stamps = stampData['stamps'] as int? ?? 0;
       final colorsStr = stampData['colors'] as String? ?? '[]';
@@ -70,6 +84,18 @@ class _StampViewScreenState extends State<StampViewScreen> {
       setState(() {
         _stamps = stamps;
         _stampColors = colors;  
+        if (stamps > oldStampCount) {
+          _lastAddedStampIndex = stamps - 1;
+          _controller.forward(from: 0.0).then((_) {
+            Future.delayed(const Duration(seconds: 1), () {
+              if (mounted) {
+                setState(() {
+                  _lastAddedStampIndex = null;
+                });
+              }
+            });
+          });
+        }
       });
     } catch (e) {
       print('Error loading stamps: $e');
@@ -104,56 +130,281 @@ class _StampViewScreenState extends State<StampViewScreen> {
     }
   }
 
+  Widget _buildStampIcon(int index) {
+    final isNewStamp = index == _lastAddedStampIndex;
+    
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        double scale = 1.0;
+        if (isNewStamp) {
+          scale = Tween<double>(begin: 0.0, end: 1.0)
+              .animate(CurvedAnimation(
+                parent: _controller,
+                curve: Curves.elasticOut,
+              ))
+              .value;
+        }
+        
+        return SparkleWidget(
+          showSparkle: isNewStamp,
+          child: Transform.scale(
+            scale: scale,
+            child: Icon(
+              Icons.icecream,
+              size: 50,
+              color: index < _stamps ? _stampColors[index] : Colors.grey,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gelato Stamp Card'),
+        elevation: 0,
+        backgroundColor: Colors.pink[100],
       ),
+      backgroundColor: Colors.pink[50], // Light pink background
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Your Stamps:',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            // 3x3 grid layout
-            Column(
-              children: List.generate(3, (row) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(3, (col) {
-                    int index = row * 3 + col;
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.icecream,
-                        size: 50,
-                        color: index < _stamps ? _stampColors[index] : Colors.grey,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Stamp Card
+              Card(
+                elevation: 8,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.white,
+                        Colors.pink[50]!,
+                      ],
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Logo or Brand Image could go here
+                        const Text(
+                          'Almare Gelato',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.pink,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Collect 9 stamps for a free gelato!',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        // Stamps Grid
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: Colors.pink[100]!,
+                              width: 2,
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: List.generate(3, (row) {
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(3, (col) {
+                                  int index = row * 3 + col;
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: _buildStampIcon(index),
+                                  );
+                                }),
+                              );
+                            }),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          '${_stamps}/9 stamps collected',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+              // Buttons with enhanced styling
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: _scanQrCodeAndAddStamp,
+                    icon: const Icon(Icons.qr_code_scanner),
+                    label: const Text('Scan QR Code'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pink,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
                       ),
-                    );
-                  }),
-                );
-              }),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _scanQrCodeAndAddStamp, // Pass as a function reference
-              child: const Text('Scan QR Code'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                await DatabaseHelper.instance.addStamp();
-                await loadStamps();
-              },
-              child: const Text('Add Stamp (Test)'),
-            ),
-          ],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      await DatabaseHelper.instance.addStamp();
+                      await loadStamps();
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('Test'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pink[300],
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+class SparkleWidget extends StatefulWidget {
+  final Widget child;
+  final bool showSparkle;
+
+  const SparkleWidget({
+    super.key,
+    required this.child,
+    required this.showSparkle,
+  });
+
+  @override
+  State<SparkleWidget> createState() => _SparkleWidgetState();
+}
+
+class _SparkleWidgetState extends State<SparkleWidget> with SingleTickerProviderStateMixin {
+  late AnimationController _sparkleController;
+  List<Sparkle> sparkles = [];
+  final int numberOfSparkles = 8;
+
+  @override
+  void initState() {
+    super.initState();
+    _sparkleController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    
+    // Create sparkles with random positions
+    for (int i = 0; i < numberOfSparkles; i++) {
+      sparkles.add(Sparkle(
+        angle: (i * 2 * math.pi) / numberOfSparkles,
+        distance: 30,
+        size: math.Random().nextDouble() * 5 + 5,
+      ));
+    }
+  }
+
+  @override
+  void dispose() {
+    _sparkleController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(SparkleWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.showSparkle && !oldWidget.showSparkle) {
+      _sparkleController.forward(from: 0.0);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        widget.child,
+        if (widget.showSparkle)
+          ...sparkles.map((sparkle) {
+            return AnimatedBuilder(
+              animation: _sparkleController,
+              builder: (context, child) {
+                final progress = _sparkleController.value;
+                final opacity = (1 - progress).clamp(0.0, 1.0);
+                final distance = sparkle.distance * progress;
+                
+                return Transform(
+                  transform: Matrix4.identity()
+                    ..translate(
+                      distance * math.cos(sparkle.angle),
+                      distance * math.sin(sparkle.angle),
+                    ),
+                  child: Opacity(
+                    opacity: opacity,
+                    child: Icon(
+                      Icons.star,
+                      color: Colors.yellow,
+                      size: sparkle.size,
+                    ),
+                  ),
+                );
+              },
+            );
+          }).toList(),
+      ],
+    );
+  }
+}
+
+class Sparkle {
+  final double angle;
+  final double distance;
+  final double size;
+
+  Sparkle({
+    required this.angle,
+    required this.distance,
+    required this.size,
+  });
 }
