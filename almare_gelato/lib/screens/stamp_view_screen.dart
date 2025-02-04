@@ -4,6 +4,8 @@ import '../Database.dart';
 import 'dart:math'; 
 import 'dart:convert';
 import 'dart:math' as math;
+import '../themes/themes_colors.dart';
+import '../widgets/customer_drawer.dart';
 
 class StampViewScreen extends StatefulWidget {
   const StampViewScreen({super.key});
@@ -106,18 +108,18 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: const Column(
+          title: Column(
             children: [
               Icon(
                 Icons.celebration,
-                color: Colors.pink,
+                color: ThemeColors.primaryColor,
                 size: 50,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'Congratulations!',
                 style: TextStyle(
-                  color: Colors.pink,
+                  color: ThemeColors.primaryColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -129,7 +131,7 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
           ),
           actions: [
             TextButton(
-              child: const Text('OK', style: TextStyle(color: Colors.pink)),
+              child: Text('OK', style: TextStyle(color: ThemeColors.primaryColor)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -316,11 +318,30 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gelato Stamp Card'),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+        title: const Text(
+          'Stamp Card',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: ThemeColors.primaryColor,
         elevation: 0,
-        backgroundColor: Colors.pink[100],
+        centerTitle: true,
       ),
-      backgroundColor: Colors.pink[50], // Light pink background
+      drawer: const CustomDrawer(),
+      backgroundColor: ThemeColors.backgroundColor,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -336,12 +357,12 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Colors.white,
-                        Colors.pink[50]!,
+                        ThemeColors.surfaceColor,
+                        ThemeColors.backgroundColor,
                       ],
                     ),
                   ),
@@ -351,30 +372,30 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // Logo or Brand Image could go here
-                        const Text(
+                        Text(
                           'Almare Gelato',
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
-                            color: Colors.pink,
+                            color: ThemeColors.primaryColor,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
+                        Text(
                           'Collect 9 stamps for a free gelato!',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey,
+                            color: ThemeColors.subtitleTextColor,
                           ),
                         ),
                         const SizedBox(height: 24),
                         // Stamps Grid
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.7),
+                            color: ThemeColors.surfaceColor.withOpacity(0.7),
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(
-                              color: Colors.pink[100]!,
+                              color: ThemeColors.accentColor,
                               width: 2,
                             ),
                           ),
@@ -403,10 +424,10 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
                         const SizedBox(height: 24),
                         Text(
                           '${_stamps}/9 stamps collected',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                            color: ThemeColors.subtitleTextColor,
                           ),
                         ),
                       ],
@@ -424,7 +445,7 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
                     icon: const Icon(Icons.qr_code_scanner),
                     label: const Text('Scan QR Code'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.pink,
+                      backgroundColor: ThemeColors.primaryColor,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -444,7 +465,7 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
                     icon: const Icon(Icons.add),
                     label: const Text('Test'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.pink[300],
+                      backgroundColor: ThemeColors.accentColor,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,

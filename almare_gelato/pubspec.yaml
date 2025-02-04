@@ -66,6 +66,7 @@ flutter:
   assets:
     - images/Berkeley.jpg
     - images/pleasanton.jpg
+    - images/Logo.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

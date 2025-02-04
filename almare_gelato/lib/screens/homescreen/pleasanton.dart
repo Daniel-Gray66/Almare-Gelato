@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'common.dart';
+import 'package:almare_gelato/themes/themes_colors.dart';
 
 class Pleasanton extends StatelessWidget {
   const Pleasanton({super.key});
@@ -16,12 +17,24 @@ class Pleasanton extends StatelessWidget {
       padding: const EdgeInsets.all(5.0),
       width: MediaQuery.of(context).size.width,
       child: AspectRatio(
-        aspectRatio: 16/9,  // Fixed typo: aspectRation -> aspectRatio
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(35.0),
-          child: Image.asset(
-            'images/pleasanton.jpg',
-            fit: BoxFit.cover,  // Moved fit to Image.asset
+        aspectRatio: 16/9,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(35.0),
+            boxShadow: [
+              BoxShadow(
+                color: ThemeColors.shadowColor,
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(35.0),
+            child: Image.asset(
+              'images/pleasanton.jpg',
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
@@ -30,59 +43,139 @@ class Pleasanton extends StatelessWidget {
 
   Widget hours() {
     return Container(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(16.0),
       child: Center(
         child: Column(
           children: [
-            const Divider(),
-            const Text(
-              "Hours",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: ThemeColors.surfaceColor,
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(
+                  color: ThemeColors.dividerColor,
+                  width: 1.5,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: ThemeColors.shadowColor,
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    "Hours",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: ThemeColors.primaryColor,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Table(
+                    border: Common.border(),
+                    columnWidths: const <int, TableColumnWidth>{
+                      0: FlexColumnWidth(),
+                      1: FlexColumnWidth(),
+                    },
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                    children: [
+                      Common.row("Mon", "Closed"),
+                      Common.row("T-Th", "1pm-8pm"),
+                      Common.row("Fri", "12pm-8pm"),
+                      Common.row("Sat", "12pm-9pm"),
+                      Common.row("Sun", "Closed"),
+                    ],
+                  ),
+                ],
               ),
             ),
-            Table(
-              border: Common.border(),
-              columnWidths: const <int, TableColumnWidth>{
-                0: FlexColumnWidth(),
-                1: FlexColumnWidth(),
-              },
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: [
-                Common.row("Mon", "Closed"),
-                Common.row("T-Th", "1pm-8pm"),
-                Common.row("Fri", "12pm-8pm"),
-                Common.row("Sat", "12pm-9pm"),
-                Common.row("Sun", "Closed"),
+            const SizedBox(height: 32),
+            _buildInfoSection(
+              "Contact",
+              [
+                InfoItem(Icons.phone, "925 425 7266"),
               ],
             ),
-            const Divider(height: 60),
-            const Text(
-              "Phone",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-              ),
+            const SizedBox(height: 32),
+            _buildInfoSection(
+              "Delivery Partners",
+              [
+                InfoItem(Icons.delivery_dining, "UberEats"),
+                InfoItem(Icons.delivery_dining, "Grubhub"),
+                InfoItem(Icons.delivery_dining, "Doordash"),
+              ],
             ),
-            const Text("925 425 7266", style: TextStyle(fontSize: 20)),
-            const Divider(height: 60),
-            const Text(
-              "Partners",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-            const Text("UberEats", style: TextStyle(fontSize: 20)),
-            const Text("Grubhub", style: TextStyle(fontSize: 20)),
-            const Text("Doordash", style: TextStyle(fontSize: 20)),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildInfoSection(String title, List<InfoItem> items) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: ThemeColors.surfaceColor,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: ThemeColors.dividerColor,
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: ThemeColors.shadowColor,
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: ThemeColors.primaryColor,
+              letterSpacing: 1.2,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ...items.map((item) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  item.icon,
+                  color: ThemeColors.accentColor,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  item.text,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: ThemeColors.textColor,
+                  ),
+                ),
+              ],
+            ),
+          )).toList(),
+        ],
+      ),
+    );
+  }
+}
+
+class InfoItem {
+  final IconData icon;
+  final String text;
+
+  InfoItem(this.icon, this.text);
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'package:almare_gelato/themes/themes_colors.dart';
+import '../widgets/customer_drawer.dart';
 
 class FlavorInfo {
   final String name;
@@ -20,17 +22,17 @@ class FlavorViewScreen extends StatelessWidget {
     FlavorInfo(
       name: 'Pistachio',
       ingredients: ['Pistachios', 'Milk', 'Cream', 'Sugar'],
-      color: Color(0xFFDCEDC8),
+      color: Color(0xFF81C784),  // Soft green
     ),
     FlavorInfo(
       name: 'Hazelnut',
       ingredients: ['Hazelnuts', 'Milk', 'Cream', 'Sugar'],
-      color: Color(0xFFD7CCC8),
+      color: Color(0xFF90A4AE),  // Blue grey
     ),
     FlavorInfo(
       name: 'Gulab Jamun',
       ingredients: ['Gulab Jamun', 'Pistachios', 'Milk', 'Cream', 'Sugar', 'Cardamom'],
-      color: Color(0xFFFFB74D),  // Golden orange
+      color: Color(0xFF64B5F6),  // Light blue
     ),
     FlavorInfo(
       name: 'Toasted Almond & Caramelized Fig',
@@ -42,7 +44,7 @@ class FlavorViewScreen extends StatelessWidget {
         'Cream',
         'Sugar',
       ],
-      color: Color(0xFF8D6E63),  // Warm brown
+      color: Color(0xFF90CAF9),  // Very light blue
     ),
   ];
 
@@ -50,47 +52,47 @@ class FlavorViewScreen extends StatelessWidget {
     FlavorInfo(
       name: 'Ube',
       ingredients: ['Purple Yam', 'Milk', 'Cream', 'Sugar', 'Vanilla'],
-      color: Color(0xFF9575CD),  // Purple
+      color: Color(0xFF7986CB),  // Indigo
     ),
     FlavorInfo(
       name: 'Key Lime',
       ingredients: ['Key Lime Juice', 'Milk', 'Cream', 'Sugar', 'Graham Cracker'],
-      color: Color(0xFFDCEDC8),  // Light green
+      color: Color(0xFF4FC3F7),  // Light blue
     ),
     FlavorInfo(
       name: 'Oreo Cookie',
       ingredients: ['Oreo Cookies', 'Milk', 'Cream', 'Sugar', 'Vanilla'],
-      color: Color(0xFFEEEEEE),  // Light grey
+      color: Color(0xFF78909C),  // Blue grey
     ),
     FlavorInfo(
       name: 'Cappuccino Chip',
       ingredients: ['Coffee', 'Chocolate Chips', 'Milk', 'Cream', 'Sugar'],
-      color: Color(0xFFD7CCC8),  // Light brown
-    ),
+      color: Color(0xFF90A4AE),  // Blue grey
+    ),  
     FlavorInfo(
       name: 'Mint Chip',
       ingredients: ['Mint Extract', 'Chocolate Chips', 'Milk', 'Cream', 'Sugar'],
-      color: Color(0xFFC8E6C9),  // Mint green
+      color: Color(0xFF4DB6AC),  // Teal
     ),
     FlavorInfo(
       name: 'Rose',
       ingredients: ['Rose Water', 'Milk', 'Cream', 'Sugar'],
-      color: Color(0xFFF8BBD0),  // Light pink
+      color: Color(0xFF81D4FA),  // Light blue
     ),
     FlavorInfo(
       name: 'Dark Chocolate',
       ingredients: ['Dark Chocolate', 'Cocoa Powder', 'Milk', 'Cream', 'Sugar'],
-      color: Color(0xFF795548),  // Dark brown
+      color: Color(0xFF546E7A),  // Dark blue grey
     ),
     FlavorInfo(
       name: 'Salted Caramel',
       ingredients: ['Caramel', 'Sea Salt', 'Milk', 'Cream', 'Sugar'],
-      color: Color(0xFFFFCC80),  // Caramel color
+      color: Color(0xFF64B5F6),  // Light blue
     ),
     FlavorInfo(
       name: 'Banana Caramel',
       ingredients: ['Fresh Bananas', 'Caramel', 'Milk', 'Cream', 'Sugar'],
-      color: Color(0xFFFFE0B2),  // Light banana color
+      color: Color(0xFF42A5F5),  // Blue
     ),
   ];
 
@@ -98,27 +100,27 @@ class FlavorViewScreen extends StatelessWidget {
     FlavorInfo(
       name: 'Strawberry',
       ingredients: ['Fresh Strawberries', 'Water', 'Sugar', 'Lemon Juice'],
-      color: Color(0xFFFFCDD2),  // Light strawberry pink
+      color: Color(0xFF29B6F6),  // Light blue
     ),
     FlavorInfo(
       name: 'Lemon',
       ingredients: ['Fresh Lemon Juice', 'Water', 'Sugar', 'Lemon Zest'],
-      color: Color(0xFFFFF9C4),  // Light yellow
+      color: Color(0xFF4FC3F7),  // Light blue
     ),
     FlavorInfo(
       name: 'Jamaica',
       ingredients: ['Hibiscus Flowers', 'Water', 'Sugar', 'Lime Juice'],
-      color: Color(0xFFE57373),  // Deep red
+      color: Color(0xFF1E88E5),  // Blue
     ),
     FlavorInfo(
       name: 'Jolly Rancher',
       ingredients: ['Jolly Rancher Syrup', 'Water', 'Sugar'],
-      color: Color(0xFF81C784),  // Bright green
+      color: Color(0xFF039BE5),  // Blue
     ),
     FlavorInfo(
       name: 'Mango',
       ingredients: ['Fresh Mango', 'Water', 'Sugar', 'Lime Juice'],
-      color: Color(0xFFFFB74D),  // Mango orange
+      color: Color(0xFF03A9F4),  // Light blue
     ),
   ];
 
@@ -126,18 +128,30 @@ class FlavorViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
         title: const Text(
-          'Our Flavors',
+          'Flavors',
           style: TextStyle(
             fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFFF8BBD0),
+        backgroundColor: ThemeColors.primaryColor,
         elevation: 0,
-        centerTitle: true,  // Center the title
+        centerTitle: true,
       ),
-      backgroundColor: const Color(0xFFFCE4EC),
+      drawer: const CustomDrawer(),
+      backgroundColor: ThemeColors.backgroundColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -145,10 +159,10 @@ class FlavorViewScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _buildCategorySection('Nut Flavors', nutFlavors),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
               _buildCategorySection('Nut Free', noNutFlavors),
-              const SizedBox(height: 32),
-              _buildCategorySection('Sorbets', sorbetFlavors),
+              const SizedBox(height: 24),
+              _buildCategorySection('Sorbets (Vegan)', sorbetFlavors),
             ],
           ),
         ),
@@ -161,46 +175,40 @@ class FlavorViewScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+          margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
-                const Color(0xFFF8BBD0),
-                const Color(0xFFF8BBD0).withOpacity(0.8),
+                ThemeColors.primaryColor,
+                ThemeColors.accentColor,
               ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
             ),
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
-                spreadRadius: 1,
-                blurRadius: 4,
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 0,
+                blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
             ],
           ),
           child: Text(
-            title.toUpperCase(),  // Uppercase the title
+            title.toUpperCase(),
             style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
               color: Colors.white,
-              letterSpacing: 1.2,  // Add letter spacing
-              shadows: [
-                Shadow(
-                  offset: Offset(1.0, 1.0),
-                  blurRadius: 3.0,
-                  color: Color.fromARGB(100, 0, 0, 0),
-                ),
-              ],
+              letterSpacing: 1.2,
             ),
             textAlign: TextAlign.center,
           ),
         ),
-        const SizedBox(height: 16),  // Increased spacing after title
         ...flavors.map((flavor) => _buildFlavorButton(flavor)),
+        const SizedBox(height: 8),
       ],
     );
   }
