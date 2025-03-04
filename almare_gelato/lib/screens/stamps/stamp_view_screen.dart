@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import '../Database.dart';
 import 'dart:math'; 
 import 'dart:convert';
+import '../../../services/database_service.dart';
 import 'dart:math' as math;
-import '../themes/themes_colors.dart';
-import '../widgets/customer_drawer.dart';
+import '../../themes/themes_colors.dart';
+import '../../widgets/customer_drawer.dart';
 
 class StampViewScreen extends StatefulWidget {
   const StampViewScreen({super.key});
@@ -228,6 +228,10 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
   Widget _buildStampIcon(int index) {
     final isNewStamp = index == _lastAddedStampIndex;
     
+    if (index >= _stampColors.length && index < _stamps) {
+      _stampColors.add(getRandomColor());
+    }
+    
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -267,7 +271,7 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
                     child: Icon(
                       Icons.icecream,
                       size: 50,
-                      color: _stampColors[index],
+                      color: index < _stampColors.length ? _stampColors[index] : getRandomColor(),
                     ),
                   ),
                 ),
@@ -289,7 +293,7 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
                       width: 4,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: _stampColors[index],
+                        color: index < _stampColors.length ? _stampColors[index] : getRandomColor(),
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -309,7 +313,9 @@ class _StampViewScreenState extends State<StampViewScreen> with SingleTickerProv
       child: Icon(
         Icons.icecream,
         size: 50,
-        color: index < _stamps ? _stampColors[index] : Colors.grey,
+        color: index < _stamps 
+            ? (index < _stampColors.length ? _stampColors[index] : getRandomColor()) 
+            : Colors.grey,
       ),
     );
   }

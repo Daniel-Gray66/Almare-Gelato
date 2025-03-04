@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/home_screen.dart';
-import '../screens/stamp_view_screen.dart';
+import '../screens/stamps/stamp_view_screen.dart';
 import '../screens/flavor_view_screen.dart';
 import '../screens/history_view_screen.dart';
 import '../screens/announcements_screen.dart';
