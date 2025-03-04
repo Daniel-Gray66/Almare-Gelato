@@ -1,7 +1,7 @@
 import 'package:almare_gelato/screens/homescreen/berkeley.dart';
 import 'package:almare_gelato/screens/homescreen/pleasanton.dart';
 import 'package:flutter/material.dart';
-import '../widgets/customer_drawer.dart';
+import 'package:almare_gelato/navigation/customer_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

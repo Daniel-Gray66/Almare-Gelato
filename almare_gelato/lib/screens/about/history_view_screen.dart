@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
-import 'package:almare_gelato/widgets/customer_drawer.dart';
+import '../homescreen/home_screen.dart';
+import 'package:almare_gelato/navigation/customer_drawer.dart';
 
 class HistoryViewScreen extends StatelessWidget {
   const HistoryViewScreen({super.key});

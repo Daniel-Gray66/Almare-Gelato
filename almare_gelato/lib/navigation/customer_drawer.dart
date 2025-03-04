@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../screens/home_screen.dart';
+import '../screens/homescreen/home_screen.dart';
 import '../screens/stamps/stamp_view_screen.dart';
-import '../screens/flavor_view_screen.dart';
-import '../screens/history_view_screen.dart';
-import '../screens/announcements_screen.dart';
+import '../screens/flavors/flavor_view_screen.dart';
+import '../screens/about/history_view_screen.dart';
+import '../screens/announcements/announcements_screen.dart';
 import 'package:almare_gelato/themes/themes_colors.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -68,18 +68,14 @@ class CustomDrawer extends StatelessWidget {
                 _buildDrawerItem(
                   icon: Icons.home,
                   title: 'Home',
-                  onTap: () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  ),
+                  onTap: () => _navigateTo(context, const HomeScreen()),
+                  isActive: _isCurrentScreen(context, HomeScreen),
                 ),
                 _buildDrawerItem(
                   icon: Icons.icecream,
                   title: 'Stamp Card',
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const StampViewScreen()),
-                  ),
+                  onTap: () => _navigateTo(context, const StampViewScreen()),
+                  isActive: _isCurrentScreen(context, StampViewScreen),
                 ),
                 _buildDrawerItem(
                   icon: Icons.menu_book,
@@ -88,6 +84,7 @@ class CustomDrawer extends StatelessWidget {
                     context,
                     MaterialPageRoute(builder: (context) => const FlavorViewScreen()),
                   ),
+                  isActive: _isCurrentScreen(context, FlavorViewScreen),
                 ),
                 _buildDrawerItem(
                   icon: Icons.history,
@@ -96,6 +93,7 @@ class CustomDrawer extends StatelessWidget {
                     context,
                     MaterialPageRoute(builder: (context) => const HistoryViewScreen()),
                   ),
+                  isActive: _isCurrentScreen(context, HistoryViewScreen),
                 ),
                 _buildDrawerItem(
                   icon: Icons.campaign,
@@ -108,6 +106,7 @@ class CustomDrawer extends StatelessWidget {
                       ),
                     );
                   },
+                  isActive: _isCurrentScreen(context, AnnouncementsScreen),
                 ),
               ],
             ),
@@ -121,11 +120,12 @@ class CustomDrawer extends StatelessWidget {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    bool isActive = false,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: Material(
-        color: Colors.transparent,
+        color: isActive ? ThemeColors.primaryColor.withOpacity(0.1) : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
@@ -136,7 +136,7 @@ class CustomDrawer extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  color: ThemeColors.accentColor,
+                  color: isActive ? ThemeColors.primaryColor : ThemeColors.accentColor,
                   size: 24,
                 ),
                 const SizedBox(width: 16),
@@ -144,8 +144,8 @@ class CustomDrawer extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: ThemeColors.bodyTextColor,
+                    fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+                    color: isActive ? ThemeColors.primaryColor : ThemeColors.bodyTextColor,
                   ),
                 ),
               ],
@@ -154,5 +154,19 @@ class CustomDrawer extends StatelessWidget {
         ),
       ),
     );
+  }
+  
+  void _navigateTo(BuildContext context, Widget screen) {
+    Navigator.pop(context);
+    if (!_isCurrentScreen(context, screen.runtimeType)) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => screen),
+      );
+    }
+  }
+  
+  bool _isCurrentScreen(BuildContext context, Type screenType) {
+    return context.widget.runtimeType == screenType;
   }
 }

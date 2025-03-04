@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import '../homescreen/home_screen.dart';
 import 'package:almare_gelato/themes/themes_colors.dart';
-import '../widgets/customer_drawer.dart';
-import '../models/flavor_info.dart';
-import '../repositories/flavor_repository.dart';
-import '../widgets/common/app_bar.dart';
+import 'package:almare_gelato/navigation/customer_drawer.dart';
 
 class FlavorInfo {
   final String name;
